@@ -34,6 +34,9 @@ class MainWindow(QMainWindow):
         self.initUI()
 
     def initUI(self):
+
+        # Запуск интерфейса
+
         uic.loadUi('main.ui', self)
         self.changeColor()
         self.emptyNameLabel.hide()
@@ -43,28 +46,42 @@ class MainWindow(QMainWindow):
         for medal in self.medal_types:
             eval(f'self.{medal}Frame.hide()')
 
+        # Стартовое окно
+
         self.startButton.clicked.connect(self.openRegistrationPage)
         self.anotherQuitGameButton.clicked.connect(self.quitGame)
+
+        # Ввод имени
 
         self.saveNameButton.clicked.connect(self.openFormMenu)
         self.nameEdit.textChanged.connect(self.setName)
         self.quitRegistrationPageButton.clicked.connect(self.openGreetingPage)
 
+        # Ввод класса
+
         self.firstClassButton.clicked.connect(self.setForm)
         self.secondClassButton.clicked.connect(self.setForm)
+
+        # Основное окно
 
         self.startGameButton.clicked.connect(self.openGameMenu)
         self.shopButton.clicked.connect(self.openShop)
         self.quitGameButton.clicked.connect(self.quitGame)
+        self.quitMainGameButton.clicked.connect(self.openGameMenu)
+
+        # Выбор сложности
 
         self.easyDifficultButton.clicked.connect(self.openGame)
         self.hardDifficultButton.clicked.connect(self.openGame)
         self.quitChooseDifficultPageButton.clicked.connect(self.openMainWindow)
 
+        # Игровое окно
+
         self.generateTaskButton.clicked.connect(self.generateTask)
         self.checkAnswerButton.clicked.connect(self.checkAnswer)
 
-        self.quitMainGameButton.clicked.connect(self.openGameMenu)
+        # Магазин
+
         self.medalBuyButton.clicked.connect(self.addMedal)
         self.heartBuyButton.clicked.connect(self.addMedal)
         self.globusBuyButton.clicked.connect(self.addMedal)
@@ -141,20 +158,37 @@ class MainWindow(QMainWindow):
 
         form = str(self.form)
         difficulty = self.difficulty
-        names = rnd.sample(NAMES, 3)
+        names = list(rnd.sample(NAMES, 3))
+        names_gent = list(map(lambda x: morph.parse(x)[0].inflect({"gent"}).word.capitalize(), names))
+        names_datv = list(map(lambda x: morph.parse(x)[0].inflect({"datv"}).word.capitalize(), names))
         objects = rnd.sample(OBJECTS, 3)
-        n1 = rnd.randint(1, 9)
-        n2 = rnd.randint(1, 9)
-        difference_under_10 = rnd.randint(1, 10 - min(n1, n2))
+        nums1 = sorted([rnd.randint(1, 9)] * 2)
+        difference_under_10 = rnd.randint(1, 10 - nums1[0])
 
         tasks = {
             '1': {
                 'easy': [
-                    (f'''У {morph.parse(names[0])[0].inflect({"gent"}).word.capitalize()} есть {min(n1, n2)} {morph.parse(objects[0])[0].make_agree_with_number(min(n1, n2)).word}. {morph.parse(names[0])[0].inflect({"datv"}).word.capitalize()} дали еще {difference_under_10} штуки. Сколько стало {morph.parse(objects[0])[0].inflect({"plur", "gent"}).word} у {morph.parse(names[0])[0].inflect({"gent"}).word.capitalize()}?''',
-                     min(n1, n2) + difference_under_10)]
+                    (f'У {names_gent[0]} есть {nums1[0]} {morph.parse(objects[0])[0].make_agree_with_number(nums1[0]).word}, {names_datv[0]} дали еще {difference_under_10}. Сколько стало {morph.parse(objects[0])[0].inflect({"plur", "gent"}).word} у {names_gent[0]}?',
+                     nums1[0] + difference_under_10),
+                    (f'У {names_gent[0]} есть {nums1[0]} {morph.parse(objects[0])[0].make_agree_with_number(nums1[0]).word}, {names[0]} {"съел" if NAMES.index(names[0]) < 10 else "съела"} {difference_under_10} {morph.parse(objects[0])[0].make_agree_with_number(difference_under_10).word}. Сколько стало {morph.parse(objects[0])[0].inflect({"plur", "gent"}).word} у {names_gent[0]}?',
+                     nums1[0] - difference_under_10),
+                    (f'У {names_gent[0]} {nums1[0]} {morph.parse(objects[0])[0].make_agree_with_number(nums1[0]).word}, а у {names_gent[1]} {nums1[0] + difference_under_10} {morph.parse(objects[0])[0].make_agree_with_number(nums1[0] + difference_under_10).word}. На сколько у {names_gent[1]} {morph.parse(objects[0])[0].inflect({"plur", "gent"}).word} больше, чем у {names_gent[0]}?',
+                     difference_under_10),
+                    (f'У {names_gent[0]} {nums1[0] + difference_under_10} {morph.parse(objects[0])[0].make_agree_with_number(nums1[0] + difference_under_10).word}, а у {names_gent[1]} {nums1[0]} {morph.parse(objects[0])[0].make_agree_with_number(nums1[0]).word}. На сколько у {names_gent[1]} {morph.parse(objects[0])[0].inflect({"plur", "gent"}).word} меньше, чем у {names_gent[0]}?',
+                     difference_under_10)
+                ],
+                'hard': [
+                    (f'У {names_gent[0]} есть {nums1[0]} {morph.parse(objects[0])[0].make_agree_with_number(nums1[0]).word} и {morph.parse(objects[1])[0].inflect({"plur"}).word}, причем {morph.parse(objects[1])[0].inflect({"plur", "gent"}).word} на {difference_under_10} больше, чем {morph.parse(objects[0])[0].inflect({"plur", "gent"}).word}. Сколько всего фруктов у {names_gent[0]}?',
+                     nums1[0] * 2 + difference_under_10),
+                    (f'У {names_gent[0]} есть {nums1[0]} {morph.parse(objects[0])[0].make_agree_with_number(nums1[0]).word} и {morph.parse(objects[1])[0].inflect({"plur"}).word}, причем {morph.parse(objects[1])[0].inflect({"plur", "gent"}).word} на {difference_under_10} меньше, чем {morph.parse(objects[0])[0].inflect({"plur", "gent"}).word}. Сколько всего фруктов у {names_gent[0]}?',
+                     nums1[0] * 2 - difference_under_10)
+                ]
+            },
+            '2': {
+
             }
         }
-        task = tasks['1']['easy'][0]
+        task = tasks[form][difficulty][rnd.randint(0, len(tasks[form][difficulty]) - 1)]
         self.currentTaskLabel.setText(task[0])
         self.answer = task[1]
 
