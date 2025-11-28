@@ -15,9 +15,16 @@ OBJECTS = ['яблоко', 'банан', 'апельсин',
 NAMES = ['Саша', 'Серёжа', 'Дима', 'Лёша', 'Максим',
          'Ваня', 'Артем', 'Миша', 'Кирилл', 'Егор',
          'Лена', 'Оля', 'Таня', 'Аня', 'Катя',
-         'Маша', 'Ира', 'Даша', 'Настя', 'Юля']
+         'Маша', 'Даша', 'Настя', 'Юля']
 
 PLACES = ['на столе', 'в тарелке', 'в ящике', 'в коробке', 'в миске', ]
+
+SIMPLE = [2, 3, 5, 7, 11, 13, 17, 19, 23, 27, 29,
+          31, 37, 41, 43, 47, 53, 59, 61, 67, 71,
+          73, 79, 83, 89, 97]
+
+def is_not_simple(n):
+    return n not in SIMPLE
 
 
 class MainWindow(QMainWindow):
@@ -96,6 +103,13 @@ class MainWindow(QMainWindow):
         self.starBuyButton.clicked.connect(self.changeColor)
         self.quitShopButton.clicked.connect(self.openMainWindow)
 
+    def getDivisors(self, n):
+        divisors = []
+        for i in range(2, n):
+            if n % i == 0:
+                divisors.append(i)
+        return divisors
+
     def setName(self):
         self.name = self.nameEdit.text()
         self.emptyNameLabel.hide()
@@ -162,7 +176,11 @@ class MainWindow(QMainWindow):
         names_gent = list(map(lambda x: morph.parse(x)[0].inflect({"gent"}).word.capitalize(), names))
         names_datv = list(map(lambda x: morph.parse(x)[0].inflect({"datv"}).word.capitalize(), names))
         objects = rnd.sample(OBJECTS, 3)
-        nums1 = sorted([rnd.randint(1, 9)] * 2)
+        nums1 = sorted([rnd.randint(1, 9), rnd.randint(1, 9)])
+        nums2 = sorted([rnd.choice(list(filter(is_not_simple, range(2, 101)))),
+                        rnd.choice(list(filter(is_not_simple, range(2, 101))))])
+        difference_under_100_1 = rnd.randint(1, 100 - nums2[0])
+        difference_under_100_2 = rnd.choice(self.getDivisors(nums2[0]))
         difference_under_10 = rnd.randint(1, 10 - nums1[0])
 
         tasks = {
@@ -185,7 +203,18 @@ class MainWindow(QMainWindow):
                 ]
             },
             '2': {
-
+                'easy': [
+                    (f'У {names_gent[0]} есть {nums2[0]} {morph.parse(objects[0])[0].make_agree_with_number(nums1[0]).word}, {names_datv[0]} дали еще {difference_under_100_1}. Сколько стало {morph.parse(objects[0])[0].inflect({"plur", "gent"}).word} у {names_gent[0]}?',
+                     nums2[0] + difference_under_100_1),
+                    (f'У {names_gent[0]} есть {nums2[0]} {morph.parse(objects[0])[0].make_agree_with_number(nums1[0]).word}, {names[0]} {"съел" if NAMES.index(names[0]) < 10 else "съела"} {difference_under_100_1} {morph.parse(objects[0])[0].make_agree_with_number(difference_under_100_1).word}. Сколько стало {morph.parse(objects[0])[0].inflect({"plur", "gent"}).word} у {names_gent[0]}?',
+                     nums2[0] - difference_under_100_1),
+                    (f'У {names_gent[0]} {nums2[0]} {morph.parse(objects[0])[0].make_agree_with_number(nums2[0]).word}, а у {names_gent[1]} {nums2[0] + difference_under_100_1} {morph.parse(objects[0])[0].make_agree_with_number(nums2[0] + difference_under_100_1).word}. На сколько у {names_gent[1]} {morph.parse(objects[0])[0].inflect({"plur", "gent"}).word} больше, чем у {names_gent[0]}?',
+                     difference_under_100_1),
+                    (f'У {names_gent[0]} {nums2[0] + difference_under_100_1} {morph.parse(objects[0])[0].make_agree_with_number(nums2[0] + difference_under_100_1).word}, а у {names_gent[1]} {nums2[0]} {morph.parse(objects[0])[0].make_agree_with_number(nums2[0]).word}. На сколько у {names_gent[1]} {morph.parse(objects[0])[0].inflect({"plur", "gent"}).word} меньше, чем у {names_gent[0]}?',
+                     difference_under_100_1),
+                    (f'У {names_gent[0]} есть {nums2[0]} {morph.parse(objects[0])[0].make_agree_with_number(nums2[0]).word}, а у {names_gent[1]} - в {difference_under_100_2} {"раза" if int(str(difference_under_100_2)[-1]) in range(1, 5) and int(str(difference_under_100_2)[0]) != 1 else "раз"} меньше. Сколько {morph.parse(objects[0])[0].inflect({"gent", "plur"}).word} у {names_gent[1]}?',
+                    nums2[0] // difference_under_100_2)
+                ]
             }
         }
         task = tasks[form][difficulty][rnd.randint(0, len(tasks[form][difficulty]) - 1)]
