@@ -255,7 +255,7 @@ class MainWindow(QMainWindow):
                      ost2 * 3 + (abs(ost2 - ost3) if abs(ost2 - ost3) <= 20 else abs(ost2 - ost3) - 20) * 2 + abs(
                          ost3 - ost4)),
                     (f'У {names_gent[0]} есть {ost2} {morph.parse(objects[0])[0].make_agree_with_number(ost2).word}, {objects_plur[1]} и {objects_plur[2]}, причем {objects_plur_gent[1]} на {abs(ost2 - ost3)} больше, чем {objects_plur_gent[0]}, а {objects_plur_gent[2]} на {abs(ost3 - ost4)} больше, чем {objects_plur_gent[1]}. Сколько {objects_plur_gent[2]} у {names_gent[0]}?',
-                     ost2 - abs(ost2 - ost3) - abs(ost3 - ost4))
+                     ost2 + abs(ost2 - ost3) + abs(ost3 - ost4))
                 ]
             }
         }

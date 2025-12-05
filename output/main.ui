@@ -44,7 +44,7 @@ background-color:#0a0a0a;
 }</string>
     </property>
     <property name="currentIndex">
-     <number>5</number>
+     <number>3</number>
     </property>
     <widget class="QWidget" name="mainMenuPage">
      <property name="styleSheet">
@@ -401,7 +401,7 @@ border: 1px solid black</string>
        <rect>
         <x>380</x>
         <y>530</y>
-        <width>591</width>
+        <width>590</width>
         <height>211</height>
        </rect>
       </property>
@@ -422,7 +422,7 @@ background-color: rgb(235, 150, 0)
 }</string>
       </property>
       <property name="text">
-       <string>Я закончил</string>
+       <string>Дальше</string>
       </property>
      </widget>
      <widget class="QLabel" name="emptyNameLabel">
@@ -496,9 +496,9 @@ background-color: rgb(235, 0 , 0)
      <widget class="QLabel" name="label_2">
       <property name="geometry">
        <rect>
-        <x>300</x>
-        <y>90</y>
-        <width>1031</width>
+        <x>390</x>
+        <y>110</y>
+        <width>551</width>
         <height>71</height>
        </rect>
       </property>
@@ -512,7 +512,7 @@ background-color: rgb(235, 0 , 0)
        <enum>Qt::RightToLeft</enum>
       </property>
       <property name="text">
-       <string>Какие задачи ты хочешь порешать?</string>
+       <string>Выбери сложность</string>
       </property>
      </widget>
      <widget class="QPushButton" name="hardDifficultButton">
@@ -547,7 +547,7 @@ background-color: rgb(235, 42, 42);
 }</string>
       </property>
       <property name="text">
-       <string>Хочу сложные</string>
+       <string>Сложно</string>
       </property>
      </widget>
      <widget class="QPushButton" name="easyDifficultButton">
@@ -582,7 +582,7 @@ background-color: rgb(0, 235, 107);
 }</string>
       </property>
       <property name="text">
-       <string>Хочу полегче</string>
+       <string>Легко</string>
       </property>
      </widget>
      <widget class="QPushButton" name="quitChooseDifficultPageButton">
@@ -1272,7 +1272,7 @@ background-color: rgb(235, 65, 0)
 }</string>
       </property>
       <property name="text">
-       <string>Я решил задачу</string>
+       <string>Проверить</string>
       </property>
      </widget>
      <widget class="QPushButton" name="quitMainGameButton">
@@ -1347,11 +1347,30 @@ background-color: rgb(235, 0 , 0)
         <pointsize>14</pointsize>
        </font>
       </property>
+      <property name="styleSheet">
+       <string notr="true">background-color: rgb(255, 255, 255);</string>
+      </property>
       <property name="maximum">
        <number>99999999</number>
       </property>
       <property name="displayIntegerBase">
        <number>10</number>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="anotherGenerateTaskButton">
+      <property name="geometry">
+       <rect>
+        <x>350</x>
+        <y>260</y>
+        <width>711</width>
+        <height>291</height>
+       </rect>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">background-color: rgba(255, 255, 255, 0);</string>
+      </property>
+      <property name="text">
+       <string/>
       </property>
      </widget>
      <zorder>currentTaskLabel</zorder>
@@ -1368,6 +1387,7 @@ background-color: rgb(235, 0 , 0)
      <zorder>quitMainGameButton</zorder>
      <zorder>label_6</zorder>
      <zorder>answerSpinBox</zorder>
+     <zorder>anotherGenerateTaskButton</zorder>
     </widget>
    </widget>
   </widget>
