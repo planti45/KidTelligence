@@ -1,12 +1,12 @@
 import sys
 import sqlite3
 import random as rnd
-from pymorphy3 import MorphAnalyzer
+import pymorphy3
 
 from PyQt6 import uic
 from PyQt6.QtWidgets import QMainWindow, QApplication, QDialog
 
-morph = MorphAnalyzer()
+morph = pymorphy3.MorphAnalyzer()
 
 OBJECTS = ['яблоко', 'банан', 'апельсин',
            'абрикос', 'слива', 'груша',
@@ -16,8 +16,6 @@ NAMES = ['Саша', 'Серёжа', 'Дима', 'Лёша', 'Максим',
          'Ваня', 'Артем', 'Миша', 'Кирилл', 'Егор',
          'Лена', 'Оля', 'Таня', 'Аня', 'Катя',
          'Маша', 'Даша', 'Настя', 'Юля']
-
-PLACES = ['на столе', 'в тарелке', 'в ящике', 'в коробке', 'в миске', ]
 
 SIMPLE = [2, 3, 5, 7, 11, 13, 17, 19, 23, 27, 29,
           31, 37, 41, 43, 47, 53, 59, 61, 67, 71,
@@ -182,6 +180,7 @@ class MainWindow(QMainWindow):
         nums1 = sorted([rnd.randint(1, 9), rnd.randint(1, 9)])
         nums2 = sorted([rnd.choice(list(filter(is_not_simple, range(2, 101)))),
                         rnd.choice(list(filter(is_not_simple, range(2, 101))))])
+        multer1 = rnd.randint(2, 4)
 
         # Числа для задач на остаток
 
@@ -189,17 +188,18 @@ class MainWindow(QMainWindow):
         ost2 = rnd.randint(4, ost1 - 3)
         ost3 = rnd.randint(1, ost1 - ost2 - 1)
         ost4 = ost1 - ost2 - ost3
-        print(ost1, ost2, ost3, ost4)
         difference_under_100_1 = rnd.randint(1, 100 - nums2[0])
         difference_under_100_2 = rnd.choice(self.getDivisors(nums2[0]))
         difference_under_10 = rnd.randint(1, 10 - nums1[0])
+        nums3 = sorted([rnd.randint(5, 101), rnd.randint(5, 101), rnd.randint(5, 101)], reverse=True)
+        print(objects_plur_gent)
 
         tasks = {
             '1': {
                 'easy': [
                     (f'У {names_gent[0]} есть {nums1[0]} {morph.parse(objects[0])[0].make_agree_with_number(nums1[0]).word}, {names_datv[0]} дали еще {difference_under_10}. Сколько стало {objects_plur_gent[0]} у {names_gent[0]}?',
                      nums1[0] + difference_under_10),
-                    (f'У {names_gent[0]} есть {max(nums1[0], difference_under_10)} {morph.parse(objects[0])[0].make_agree_with_number(nums1[0]).word}, {names[0]} {"съел" if NAMES.index(names[0]) < 10 else "съела"} {min(nums1[0], difference_under_10)} {morph.parse(objects[0])[0].make_agree_with_number(difference_under_10).word}. Сколько стало {objects_plur_gent[0]} у {names_gent[0]}?',
+                    (f'У {names_gent[0]} есть {max(nums1[0], difference_under_10)} {morph.parse(objects[0])[0].make_agree_with_number(max(nums1[0], difference_under_10)).word}, {names[0]} {"съел" if NAMES.index(names[0]) < 10 else "съела"} {min(nums1[0], difference_under_10)} {morph.parse(objects[0])[0].make_agree_with_number(min(nums1[0], difference_under_10)).word}. Сколько стало {objects_plur_gent[0]} у {names_gent[0]}?',
                      abs(nums1[0] - difference_under_10)),
                     (f'У {names_gent[0]} {nums1[0]} {morph.parse(objects[0])[0].make_agree_with_number(nums1[0]).word}, а у {names_gent[1]} {nums1[0] + difference_under_10} {morph.parse(objects[0])[0].make_agree_with_number(nums1[0] + difference_under_10).word}. На сколько у {names_gent[1]} {objects_plur_gent[0]} больше, чем у {names_gent[0]}?',
                      difference_under_10),
@@ -225,11 +225,14 @@ class MainWindow(QMainWindow):
                      difference_under_100_1),
                     (f'У {names_gent[0]} есть {nums2[0]} {morph.parse(objects[0])[0].make_agree_with_number(nums2[0]).word}, а у {names_gent[1]} - в {difference_under_100_2} {"раза" if int(str(difference_under_100_2)[-1]) in range(1, 5) and int(str(difference_under_100_2)[0]) != 1 else "раз"} меньше. Сколько {objects_plur_gent[0]} у {names_gent[1]}?',
                      nums2[0] // difference_under_100_2),
-                    (f'У {names_gent[0]} есть {nums2[0]} {morph.parse(objects[0])[0].make_agree_with_number(nums2[0]).word}, а у {names_gent[1]} - в {difference_under_100_2} {"раза" if int(str(nums2[0])[-1]) in range(1, 5) and int(str(nums2[0])[0]) != 1 else "раз"} больше. Сколько {objects_plur_gent[0]} у {names_gent[1]}?',
-                     nums2[0] * difference_under_100_2),
+                    (f'У {names_gent[0]} есть {nums2[0] if nums2[0] <= 20 else nums2[0] - 20} {morph.parse(objects[0])[0].make_agree_with_number(nums2[0] if nums2[0] <= 20 else nums2[0] - 20).word}, а у {names_gent[1]} - в {multer1} раза больше. Сколько {objects_plur_gent[0]} у {names_gent[1]}?',
+                     (nums2[0] if nums2[0] <= 20 else nums2[0] - 20) * multer1),
                     (f'У {names_gent[0]} есть {nums2[0]} {morph.parse(objects[0])[0].make_agree_with_number(nums2[0]).word}, а у {names_gent[1]} - {nums2[0] * difference_under_100_2 if nums2[0] * difference_under_100_2 <= 100 else nums2[0] * self.getDivisors(nums2[0])[0]} {morph.parse(objects[0])[0].make_agree_with_number(nums2[0] * difference_under_100_2 if nums2[0] * difference_under_100_2 <= 100 else nums2[0] * self.getDivisors(nums2[0])[0]).word}. Во сколько у {names_gent[1]} {objects_plur_gent[0]} больше, чем у {names_gent[0]}?',
-                     (nums2[0] * difference_under_100_2 if nums2[0] * difference_under_100_2 <= 100 else nums2[0] * self.getDivisors(nums2[0])[0]) // nums2[0]),
-                    (f'У {names_gent[0]} есть {nums2[0]} {morph.parse(objects[0])[0].make_agree_with_number(nums2[0]).word}, а у {names_gent[1]} - {nums2[0] // difference_under_100_2} {morph.parse(objects[0])[0].make_agree_with_number(nums2[0] // difference_under_100_2).word}. Во сколько у {names_gent[1]} {objects_plur_gent[0]} меньше, чем у {names_gent[0]}?',
+                     (nums2[0] * difference_under_100_2 if nums2[0] * difference_under_100_2 <= 100 else nums2[0] * self.getDivisors(
+                                                                                                             nums2[0])[
+                                                                                                             0]) //
+                     nums2[0]),
+                    (f'У {names_gent[0]} есть {nums2[0]} {morph.parse(objects[0])[0].make_agree_with_number(nums2[0]).word}, а у {names_gent[1]} - {nums2[0] // difference_under_100_2} {morph.parse(objects[0])[0].make_agree_with_number(nums2[0] // difference_under_100_2).word}. Во сколько раз у {names_gent[1]} {objects_plur_gent[0]} меньше, чем у {names_gent[0]}?',
                      difference_under_100_2)
                 ],
                 'hard': [
@@ -238,17 +241,18 @@ class MainWindow(QMainWindow):
                     (f'У {names_gent[0]} есть {max(nums2[0], difference_under_100_1)} {morph.parse(objects[0])[0].make_agree_with_number(nums2[0]).word} и {morph.parse(objects[1])[0].inflect({"plur"}).word}, причем {objects_plur_gent[1]} на {min(nums2[0], difference_under_100_1)} меньше, чем {objects_plur_gent[0]}. Сколько всего фруктов у {names_gent[0]}?',
                      max(nums2[0], difference_under_100_1) * 2 - min(nums2[0], difference_under_100_1)),
                     (f'У {names_gent[0]} есть {nums2[0]} {morph.parse(objects[0])[0].make_agree_with_number(nums2[0]).word} и {morph.parse(objects[1])[0].inflect({"plur"}).word}, причем {objects_plur_gent[1]} в {difference_under_100_2 if difference_under_100_2 <= 10 else self.getDivisors(nums2[0])[0]} {"раза" if int(str(nums2[0])[-1]) in range(1, 5) and int(str(nums2[0])[0]) != 1 else "раз"} больше, чем {objects_plur_gent[0]}. Сколько всего фруктов у {names_gent[0]}?',
-                     nums2[0] * (difference_under_100_2 + 1)),
+                     nums2[0] * (difference_under_100_2 if difference_under_100_2 <= 10 else self.getDivisors(nums2[0])[0] + 1)),
                     (f'У {names_gent[0]} есть {nums2[0]} {morph.parse(objects[0])[0].make_agree_with_number(nums2[0]).word} и {morph.parse(objects[1])[0].inflect({"plur"}).word}, причем {objects_plur_gent[1]} в {difference_under_100_2} {"раза" if int(str(nums2[0])[-1]) in range(1, 5) and int(str(nums2[0])[0]) != 1 else "раз"} меньше, чем {objects_plur_gent[0]}. Сколько всего фруктов у {names_gent[0]}?',
                      nums2[0] * (difference_under_100_2 + 1) // difference_under_100_2),
                     (f'У {names_gent[0]} есть {ost1} {morph.parse("фрукт")[0].make_agree_with_number(ost1).word}: {ost2} {morph.parse(objects[0])[0].make_agree_with_number(ost2).word}, {ost3} {morph.parse(objects[1])[0].make_agree_with_number(ost3).word} и {objects_plur[2]}. Сколько {objects_plur_gent[2]} у {names_gent[0]}?',
                      ost4),
-                    (f'У {names_gent[0]} есть {ost2} {morph.parse(objects[0])[0].make_agree_with_number(ost2).word}, {objects_plur[1]} и {objects_plur[2]}, причем {objects_plur_gent[1]} на {abs(ost2 - ost3)} меньше, чем {objects_plur_gent[0]}, а {objects_plur_gent[2]} на {abs(ost3 - ost4)} меньше, чем {objects_plur_gent[1]}. Сколько всего фруктов у {names_gent[0]}?',
-                     ost2 + (ost2 - abs(ost2 + ost3)) + (ost2 - abs(ost2 + ost3) - abs(ost3 - ost4))),
-                    (f'У {names_gent[0]} есть {ost2} {morph.parse(objects[0])[0].make_agree_with_number(ost2).word}, {objects_plur[1]} и {objects_plur[2]}, причем {objects_plur_gent[1]} на {abs(ost2 - ost3)} меньше, чем {objects_plur_gent[0]}, а {objects_plur_gent[2]} на {abs(ost3 - ost4)} меньше, чем {objects_plur_gent[1]}. Сколько {objects_plur_gent[2]} у {names_gent[0]}?',
-                     ost2 + abs(ost2 - ost3) + abs(ost3 - ost4)),
+                    (f'У {names_gent[0]} есть {nums3[0]} {morph.parse(objects[0])[0].make_agree_with_number(nums3[0]).word}, {objects_plur[1]} и {objects_plur[2]}, причем {objects_plur_gent[1]} на {nums3[0] - nums3[1]} меньше, чем {objects_plur_gent[0]}, а {objects_plur_gent[2]} на {nums3[1] - nums3[2]} меньше, чем {objects_plur_gent[1]}. Сколько всего фруктов у {names_gent[0]}?',
+                     sum(nums3)),
+                    (f'У {names_gent[0]} есть {nums3[0]} {morph.parse(objects[0])[0].make_agree_with_number(nums3[0]).word}, {objects_plur[1]} и {objects_plur[2]}, причем {objects_plur_gent[1]} на {nums3[0] - nums3[1]} меньше, чем {objects_plur_gent[0]}, а {objects_plur_gent[2]} на {nums3[1] - nums3[2]} меньше, чем {objects_plur_gent[1]}. Сколько {objects_plur_gent[2]} у {names_gent[0]}?',
+                     nums3[2]),
                     (f'У {names_gent[0]} есть {ost2} {morph.parse(objects[0])[0].make_agree_with_number(ost2).word}, {objects_plur[1]} и {objects_plur[2]}, причем {objects_plur_gent[1]} на {abs(ost2 - ost3) if abs(ost2 - ost3) <= 20 else abs(ost2 - ost3) - 20} больше, чем {objects_plur_gent[0]}, а {objects_plur_gent[2]} на {abs(ost3 - ost4)} больше, чем {objects_plur_gent[1]}. Сколько всего фруктов у {names_gent[0]}?',
-                     ost2 * 3 + (abs(ost2 - ost3) if abs(ost2 - ost3) <= 20 else abs(ost2 - ost3) - 20) * 2 + abs(ost3 - ost4)),
+                     ost2 * 3 + (abs(ost2 - ost3) if abs(ost2 - ost3) <= 20 else abs(ost2 - ost3) - 20) * 2 + abs(
+                         ost3 - ost4)),
                     (f'У {names_gent[0]} есть {ost2} {morph.parse(objects[0])[0].make_agree_with_number(ost2).word}, {objects_plur[1]} и {objects_plur[2]}, причем {objects_plur_gent[1]} на {abs(ost2 - ost3)} больше, чем {objects_plur_gent[0]}, а {objects_plur_gent[2]} на {abs(ost3 - ost4)} больше, чем {objects_plur_gent[1]}. Сколько {objects_plur_gent[2]} у {names_gent[0]}?',
                      ost2 - abs(ost2 - ost3) - abs(ost3 - ost4))
                 ]
@@ -257,17 +261,25 @@ class MainWindow(QMainWindow):
         task = tasks[form][difficulty][rnd.randint(0, len(tasks[form][difficulty]) - 1)]
         self.currentTaskLabel.setText(task[0])
         self.answer = task[1]
+        print(ost1, ost2, ost3)
 
     def checkAnswer(self):
         if self.answerSpinBox.value() == self.answer:
             if self.difficulty == 'hard':
                 self.balance += 20
                 Dialog(20).exec()
+                self.changeColor()
             else:
                 self.balance += 10
                 Dialog(10).exec()
+                self.changeColor()
             self.currentTaskLabel.setText('')
-            self.balanceLabel.setText(f'{self.balance} KC')
+            self.balanceLabel.setText(f'{self.balance} IC')
+            self.currentTaskLabel.setStyleSheet('''
+                                    border: 2px solid rgb(0, 0, 0);
+                                    border-radius: 25px;
+                                    background-color: rgb(255, 255, 255);
+                                    ''')
 
         else:
             self.currentTaskLabel.setStyleSheet('''
@@ -325,7 +337,8 @@ class MainWindow(QMainWindow):
 
     def loadData(self):
         cur = self.con.cursor()
-        data = cur.execute(f'SELECT name, form, balance, medals FROM data WHERE name = "{self.name.lower()}"').fetchone()
+        data = cur.execute(
+            f'SELECT name, form, balance, medals FROM data WHERE name = "{self.name.lower()}"').fetchone()
         self.name = data[0]
         self.form = data[1]
         self.balance = data[2]
@@ -357,7 +370,6 @@ class Dialog(QDialog):
 
     def acceptButtonClicked(self):
         self.close()
-
 
 
 if __name__ == '__main__':
