@@ -84,6 +84,7 @@ class MainWindow(QMainWindow):
         # Игровое окно
 
         self.generateTaskButton.clicked.connect(self.generateTask)
+        self.anotherGenerateTaskButton.clicked.connect(self.generateTask)
         self.checkAnswerButton.clicked.connect(self.checkAnswer)
 
         # Магазин
