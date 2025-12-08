@@ -5,6 +5,7 @@ import pymorphy3
 
 from PyQt6 import uic
 from PyQt6.QtWidgets import QMainWindow, QApplication, QDialog
+from PyQt6.QtCore import Qt
 
 morph = pymorphy3.MorphAnalyzer()
 
@@ -36,7 +37,7 @@ class MainWindow(QMainWindow):
         self.balance = 0
         self.medals = []
         self.medal_types = ['medal', 'heart', 'globus', 'book', 'feather', 'star']
-        self.answer = 0
+        self.answer = 1502
         self.initUI()
 
     def initUI(self):
@@ -83,9 +84,9 @@ class MainWindow(QMainWindow):
 
         # Игровое окно
 
-        self.generateTaskButton.clicked.connect(self.generateTask)
         self.anotherGenerateTaskButton.clicked.connect(self.generateTask)
         self.checkAnswerButton.clicked.connect(self.checkAnswer)
+        self.answerSpinBox.setKeyboardTracking(True)
 
         # Магазин
 
@@ -102,6 +103,37 @@ class MainWindow(QMainWindow):
         self.featherBuyButton.clicked.connect(self.changeColor)
         self.starBuyButton.clicked.connect(self.changeColor)
         self.quitShopButton.clicked.connect(self.openMainWindow)
+
+    def keyPressEvent(self, event):
+        if event.key() == Qt.Key.Key_0:
+            self.answerSpinBox.setValue(int(f'{self.answerSpinBox.value()}0'))
+        if event.key() == Qt.Key.Key_1:
+            self.answerSpinBox.setValue(int(f'{self.answerSpinBox.value()}1'))
+        if event.key() == Qt.Key.Key_2:
+            self.answerSpinBox.setValue(int(f'{self.answerSpinBox.value()}2'))
+        if event.key() == Qt.Key.Key_3:
+            self.answerSpinBox.setValue(int(f'{self.answerSpinBox.value()}3'))
+        if event.key() == Qt.Key.Key_4:
+            self.answerSpinBox.setValue(int(f'{self.answerSpinBox.value()}4'))
+        if event.key() == Qt.Key.Key_5:
+            self.answerSpinBox.setValue(int(f'{self.answerSpinBox.value()}5'))
+        if event.key() == Qt.Key.Key_6:
+            self.answerSpinBox.setValue(int(f'{self.answerSpinBox.value()}6'))
+        if event.key() == Qt.Key.Key_7:
+            self.answerSpinBox.setValue(int(f'{self.answerSpinBox.value()}7'))
+        if event.key() == Qt.Key.Key_8:
+            self.answerSpinBox.setValue(int(f'{self.answerSpinBox.value()}8'))
+        if event.key() == Qt.Key.Key_9:
+            self.answerSpinBox.setValue(int(f'{self.answerSpinBox.value()}9'))
+        if event.key() == Qt.Key.Key_Backspace:
+            if len(str(self.answerSpinBox.value())) > 1:
+                self.answerSpinBox.setValue(int(f'{self.answerSpinBox.value()}'[:-1]))
+            elif len(str(self.answerSpinBox.value())) == 1:
+                self.answerSpinBox.setValue(0)
+            else:
+                pass
+        if event.key() == Qt.Key.Key_Enter:
+            self.checkAnswer()
 
     def getDivisors(self, n):
         divisors = []
@@ -149,6 +181,10 @@ class MainWindow(QMainWindow):
             self.difficulty = 'easy'
         elif self.sender() == self.hardDifficultButton:
             self.difficulty = 'hard'
+        self.checkAnswerButton.clicked.disconnect()
+        self.currentTaskLabel.setText('ЖМИ ЧТОБЫ ПОЯВИЛАСЬ НОВАЯ ЗАДАЧА')
+        self.checkAnswerButton.clicked.connect(self.generateTask)
+        self.checkAnswerButton.setText('Новая задача')
 
     def openShop(self):
         self.pages.setCurrentWidget(self.shopPage)
@@ -164,6 +200,10 @@ class MainWindow(QMainWindow):
             self.saveData(edited=True)
 
     def generateTask(self):
+        self.checkAnswerButton.clicked.disconnect()
+        self.checkAnswerButton.clicked.connect(self.checkAnswer)
+        self.checkAnswerButton.setText('Проверить')
+
         self.currentTaskLabel.setStyleSheet('''
         border: 2px solid black;
         border-radius: 25px;
@@ -210,7 +250,7 @@ class MainWindow(QMainWindow):
                 'hard': [
                     (f'У {names_gent[0]} есть {nums1[0]} {morph.parse(objects[0])[0].make_agree_with_number(nums1[0]).word} и {objects_plur[1]}, причем {objects_plur_gent[1]} на {difference_under_10} больше, чем {objects_plur_gent[0]}. Сколько всего фруктов у {names_gent[0]}?',
                      nums1[0] * 2 + difference_under_10),
-                    (f'У {names_gent[0]} есть {max(nums1[0], difference_under_10)} {morph.parse(objects[0])[0].make_agree_with_number(nums1[0]).word} и {objects_plur[1]}, причем {objects_plur_gent[1]} на {min(nums1[0], difference_under_10)} меньше, чем {objects_plur_gent[0]}. Сколько всего фруктов у {names_gent[0]}?',
+                    (f'У {names_gent[0]} есть {max(nums1[0], difference_under_10)} {morph.parse(objects[0])[0].make_agree_with_number(max(nums1[0], difference_under_10)).word} и {objects_plur[1]}, причем {objects_plur_gent[1]} на {min(nums1[0], difference_under_10)} меньше, чем {objects_plur_gent[0]}. Сколько всего фруктов у {names_gent[0]}?',
                      max(nums1[0], difference_under_10) * 2 - min(nums1[0], difference_under_10))
                 ]
             },
@@ -228,12 +268,9 @@ class MainWindow(QMainWindow):
                      nums2[0] // difference_under_100_2),
                     (f'У {names_gent[0]} есть {nums2[0] if nums2[0] <= 20 else nums2[0] - 20} {morph.parse(objects[0])[0].make_agree_with_number(nums2[0] if nums2[0] <= 20 else nums2[0] - 20).word}, а у {names_gent[1]} - в {multer1} раза больше. Сколько {objects_plur_gent[0]} у {names_gent[1]}?',
                      (nums2[0] if nums2[0] <= 20 else nums2[0] - 20) * multer1),
-                    (f'У {names_gent[0]} есть {nums2[0]} {morph.parse(objects[0])[0].make_agree_with_number(nums2[0]).word}, а у {names_gent[1]} - {nums2[0] * difference_under_100_2 if nums2[0] * difference_under_100_2 <= 100 else nums2[0] * self.getDivisors(nums2[0])[0]} {morph.parse(objects[0])[0].make_agree_with_number(nums2[0] * difference_under_100_2 if nums2[0] * difference_under_100_2 <= 100 else nums2[0] * self.getDivisors(nums2[0])[0]).word}. Во сколько у {names_gent[1]} {objects_plur_gent[0]} больше, чем у {names_gent[0]}?',
-                     (nums2[0] * difference_under_100_2 if nums2[0] * difference_under_100_2 <= 100 else nums2[0] * self.getDivisors(
-                                                                                                             nums2[0])[
-                                                                                                             0]) //
-                     nums2[0]),
-                    (f'У {names_gent[0]} есть {nums2[0]} {morph.parse(objects[0])[0].make_agree_with_number(nums2[0]).word}, а у {names_gent[1]} - {nums2[0] // difference_under_100_2} {morph.parse(objects[0])[0].make_agree_with_number(nums2[0] // difference_under_100_2).word}. Во сколько раз у {names_gent[1]} {objects_plur_gent[0]} меньше, чем у {names_gent[0]}?',
+                    (f'У {names_gent[0]} есть {nums2[0]} {morph.parse(objects[0])[0].make_agree_with_number(nums2[0]).word}, а у {names_gent[1]} – {nums2[0] * difference_under_100_2 if nums2[0] * difference_under_100_2 <= 100 else nums2[0] * self.getDivisors(nums2[0])[0]} {morph.parse(objects[0])[0].make_agree_with_number(nums2[0] * difference_under_100_2 if nums2[0] * difference_under_100_2 <= 100 else nums2[0] * self.getDivisors(nums2[0])[0]).word}. Во сколько у {names_gent[1]} {objects_plur_gent[0]} больше, чем у {names_gent[0]}?',
+                     (nums2[0] * difference_under_100_2 if nums2[0] * difference_under_100_2 <= 100 else nums2[0] * self.getDivisors(nums2[0])[0]) // nums2[0]),
+                    (f'У {names_gent[0]} есть {nums2[0]} {morph.parse(objects[0])[0].make_agree_with_number(nums2[0]).word}, а у {names_gent[1]} – {nums2[0] // difference_under_100_2} {morph.parse(objects[0])[0].make_agree_with_number(nums2[0] // difference_under_100_2).word}. Во сколько раз у {names_gent[1]} {objects_plur_gent[0]} меньше, чем у {names_gent[0]}?',
                      difference_under_100_2)
                 ],
                 'hard': [
@@ -274,13 +311,19 @@ class MainWindow(QMainWindow):
                 self.balance += 10
                 Dialog(10).exec()
                 self.changeColor()
-            self.currentTaskLabel.setText('')
+            self.answerSpinBox.setValue(0)
+            self.currentTaskLabel.setText('ЖМИ ЧТОБЫ ПОЯВИЛАСЬ НОВАЯ ЗАДАЧА')
             self.balanceLabel.setText(f'{self.balance} IC')
             self.currentTaskLabel.setStyleSheet('''
                                     border: 2px solid rgb(0, 0, 0);
                                     border-radius: 25px;
                                     background-color: rgb(255, 255, 255);
                                     ''')
+            self.answer = 1502
+            self.answerSpinBox.cleanText()
+            self.checkAnswerButton.clicked.disconnect()
+            self.checkAnswerButton.clicked.connect(self.generateTask)
+            self.checkAnswerButton.setText('Новая задача')
 
         else:
             self.currentTaskLabel.setStyleSheet('''
