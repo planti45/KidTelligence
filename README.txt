@@ -1,1 +1,1 @@
-exe файл в папке output
+exe файл в папке output\KidTelligence

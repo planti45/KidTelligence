@@ -34,7 +34,7 @@ class MainWindow(QMainWindow):
         self.difficulty = 'easy'
         self.name = ''
         self.form = 1
-        self.balance = 0
+        self.balance = 1000
         self.medals = []
         self.medal_types = ['medal', 'heart', 'globus', 'book', 'feather', 'star']
         self.answer = 1502
@@ -53,43 +53,23 @@ class MainWindow(QMainWindow):
         for medal in self.medal_types:
             eval(f'self.{medal}Frame.hide()')
 
-        # Стартовое окно
-
         self.startButton.clicked.connect(self.openRegistrationPage)
         self.anotherQuitGameButton.clicked.connect(self.quitGame)
-
-        # Ввод имени
-
         self.saveNameButton.clicked.connect(self.openFormMenu)
         self.nameEdit.textChanged.connect(self.setName)
         self.quitRegistrationPageButton.clicked.connect(self.openGreetingPage)
-
-        # Ввод класса
-
         self.firstClassButton.clicked.connect(self.setForm)
         self.secondClassButton.clicked.connect(self.setForm)
-
-        # Основное окно
-
         self.startGameButton.clicked.connect(self.openGameMenu)
         self.shopButton.clicked.connect(self.openShop)
         self.quitGameButton.clicked.connect(self.quitGame)
         self.quitMainGameButton.clicked.connect(self.openGameMenu)
-
-        # Выбор сложности
-
         self.easyDifficultButton.clicked.connect(self.openGame)
         self.hardDifficultButton.clicked.connect(self.openGame)
         self.quitChooseDifficultPageButton.clicked.connect(self.openMainWindow)
-
-        # Игровое окно
-
         self.anotherGenerateTaskButton.clicked.connect(self.generateTask)
         self.checkAnswerButton.clicked.connect(self.checkAnswer)
         self.answerSpinBox.setKeyboardTracking(True)
-
-        # Магазин
-
         self.medalBuyButton.clicked.connect(self.addMedal)
         self.heartBuyButton.clicked.connect(self.addMedal)
         self.globusBuyButton.clicked.connect(self.addMedal)
@@ -208,6 +188,7 @@ class MainWindow(QMainWindow):
         border: 2px solid black;
         border-radius: 25px;
         background-color: rgb(255, 255, 255);
+        color: #000000;
         ''')
 
         form = str(self.form)
@@ -318,6 +299,7 @@ class MainWindow(QMainWindow):
                                     border: 2px solid rgb(0, 0, 0);
                                     border-radius: 25px;
                                     background-color: rgb(255, 255, 255);
+                                    color: #000000;
                                     ''')
             self.answer = 1502
             self.answerSpinBox.cleanText()
@@ -330,6 +312,7 @@ class MainWindow(QMainWindow):
                         border: 2px solid rgb(148, 0, 0);
                         border-radius: 25px;
                         background-color: rgb(255, 61, 61);
+                        color: #000000;
                         ''')
 
     def changeColor(self):
