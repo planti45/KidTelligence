@@ -34,10 +34,9 @@ class MainWindow(QMainWindow):
         self.difficulty = 'easy'
         self.name = ''
         self.form = 1
-        self.balance = 1000
+        self.balance = 0
         self.medals = []
         self.medal_types = ['medal', 'heart', 'globus', 'book', 'feather', 'star']
-        self.answer = 1502
         self.initUI()
 
     def initUI(self):
@@ -69,7 +68,7 @@ class MainWindow(QMainWindow):
         self.quitChooseDifficultPageButton.clicked.connect(self.openMainWindow)
         self.anotherGenerateTaskButton.clicked.connect(self.generateTask)
         self.checkAnswerButton.clicked.connect(self.checkAnswer)
-        self.answerSpinBox.setKeyboardTracking(True)
+        self.answerSpinBox.setSpecialValueText(' ')
         self.medalBuyButton.clicked.connect(self.addMedal)
         self.heartBuyButton.clicked.connect(self.addMedal)
         self.globusBuyButton.clicked.connect(self.addMedal)
@@ -308,12 +307,7 @@ class MainWindow(QMainWindow):
             self.checkAnswerButton.setText('Новая задача')
 
         else:
-            self.currentTaskLabel.setStyleSheet('''
-                        border: 2px solid rgb(148, 0, 0);
-                        border-radius: 25px;
-                        background-color: rgb(255, 61, 61);
-                        color: #000000;
-                        ''')
+            Dialog(10, False).exec()
 
     def changeColor(self):
         for btn in self.buyButtons.buttons():
@@ -385,15 +379,54 @@ class MainWindow(QMainWindow):
             self.saveData()
         self.close()
 
+    def closeEvent(self, event):
+        self.quitGame()
+
 
 class Dialog(QDialog):
-    def __init__(self, reward):
+    def __init__(self, reward=10, is_correct=True):
         super().__init__()
         uic.loadUi('dialog.ui', self)
         self.reward = reward
+        self.is_correct = is_correct
+        self.setStyleSheet(f'background-color: {"rgb(170, 255, 127)" if self.is_correct else "rgb(195, 0, 0)"};')
 
         self.acceptButton.clicked.connect(self.acceptButtonClicked)
-        self.label.setText(f'Молодец! Ты правильно решил задачу. Ты получаешь {self.reward} монет!')
+
+        if self.is_correct:
+            self.setStyleSheet('''QDialog#Dialog {
+            background-color: rgb(170, 255, 127);
+            }''')
+            self.label.setText(f'Молодец! Ты правильно решил задачу. Ты получаешь {self.reward} монет!')
+            self.label.setStyleSheet('color: rgb(0, 71, 0)')
+            self.acceptButton.setStyleSheet(
+                '''QPushButton#acceptButton {
+                color: rgb(0, 0, 0);
+                background-color: rgb(0, 162, 0);
+                border: 2px solid rgb(0, 62, 0);
+                border-radius: 30px;
+                }
+                QPushButton#acceptButton:hover {
+                background-color: rgb(0, 140, 0);
+                }'''
+            )
+        else:
+            self.setStyleSheet('''QDialog#Dialog {
+            background-color: rgb(195, 0, 0);
+            }''')
+            self.label.setText('Неправильно. Попробуй сначала.')
+            self.label.setStyleSheet('color: rgb(0, 0, 0)')
+            self.acceptButton.setStyleSheet(
+                '''QPushButton#acceptButton {
+                color: rgb(0, 0, 0);
+                background-color: rgb(208, 0, 0);
+                border: 2px solid rgb(101, 0, 0);
+                border-radius: 30px;
+                }
+                QPushButton#acceptButton:hover {
+                background-color: rgb(134, 0, 0);
+                }'''
+            )
 
     def acceptButtonClicked(self):
         self.close()
