@@ -1,0 +1,230 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>Dialog</class>
+ <widget class="QDialog" name="Dialog">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>968</width>
+    <height>639</height>
+   </rect>
+  </property>
+  <property name="sizePolicy">
+   <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+    <horstretch>0</horstretch>
+    <verstretch>0</verstretch>
+   </sizepolicy>
+  </property>
+  <property name="windowTitle">
+   <string>Dialog</string>
+  </property>
+  <property name="styleSheet">
+   <string notr="true">background-color: rgb(239, 228, 176);</string>
+  </property>
+  <widget class="QStackedWidget" name="pages">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>961</width>
+     <height>621</height>
+    </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">background-color: rgb(239, 228, 176);</string>
+   </property>
+   <property name="currentIndex">
+    <number>1</number>
+   </property>
+   <widget class="QWidget" name="page1">
+    <property name="styleSheet">
+     <string notr="true">background-color: rgb(239, 228, 176);</string>
+    </property>
+    <widget class="QLabel" name="instructionLabel1">
+     <property name="geometry">
+      <rect>
+       <x>0</x>
+       <y>50</y>
+       <width>961</width>
+       <height>581</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <pointsize>16</pointsize>
+      </font>
+     </property>
+     <property name="styleSheet">
+      <string notr="true"/>
+     </property>
+     <property name="text">
+      <string/>
+     </property>
+     <property name="pixmap">
+      <pixmap>../images/instruction_page1.png</pixmap>
+     </property>
+     <property name="scaledContents">
+      <bool>true</bool>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="goForwardButton">
+     <property name="geometry">
+      <rect>
+       <x>650</x>
+       <y>10</y>
+       <width>271</width>
+       <height>51</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <family>Comic Sans MS</family>
+       <pointsize>16</pointsize>
+      </font>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">QPushButton#goForwardButton {
+background-color: rgb(178, 178, 178);
+border: 2px solid rgb(99, 99, 99);
+border-radius:10px;
+color: black;
+}
+
+QPushButton#goForwardButton:hover {
+background-color: rgb(149, 149, 149);
+}</string>
+     </property>
+     <property name="text">
+      <string>Следующая страница</string>
+     </property>
+     <property name="shortcut">
+      <string comment="аааааа"/>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="quitTutorialButton">
+     <property name="geometry">
+      <rect>
+       <x>20</x>
+       <y>10</y>
+       <width>171</width>
+       <height>51</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <family>Comic Sans MS</family>
+       <pointsize>16</pointsize>
+      </font>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">QPushButton#quitTutorialButton {
+background-color: rgb(178, 178, 178);
+border: 2px solid rgb(99, 99, 99);
+border-radius:10px;
+color: black;
+}
+
+QPushButton#quitTutorialButton:hover {
+background-color: rgb(149, 149, 149);
+}</string>
+     </property>
+     <property name="text">
+      <string>Выйти</string>
+     </property>
+     <property name="shortcut">
+      <string extracomment="Закрыть окно с подсказкой"/>
+     </property>
+    </widget>
+   </widget>
+   <widget class="QWidget" name="page2">
+    <widget class="QLabel" name="label">
+     <property name="geometry">
+      <rect>
+       <x>-60</x>
+       <y>60</y>
+       <width>1061</width>
+       <height>601</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string/>
+     </property>
+     <property name="pixmap">
+      <pixmap>../images/instruction_page2.png</pixmap>
+     </property>
+     <property name="scaledContents">
+      <bool>true</bool>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="quitTutorialButton_2">
+     <property name="geometry">
+      <rect>
+       <x>740</x>
+       <y>20</y>
+       <width>171</width>
+       <height>51</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <family>Comic Sans MS</family>
+       <pointsize>16</pointsize>
+      </font>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">QPushButton#quitTutorialButton_2 {
+background-color: rgb(178, 178, 178);
+border: 2px solid rgb(99, 99, 99);
+border-radius:10px;
+color: black;
+}
+
+QPushButton#quitTutorialButton_2:hover {
+background-color: rgb(149, 149, 149);
+}</string>
+     </property>
+     <property name="text">
+      <string>Выйти</string>
+     </property>
+     <property name="shortcut">
+      <string extracomment="Закрыть окно с подсказкой"/>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="goBackButton">
+     <property name="geometry">
+      <rect>
+       <x>20</x>
+       <y>20</y>
+       <width>311</width>
+       <height>51</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <family>Comic Sans MS</family>
+       <pointsize>16</pointsize>
+      </font>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">QPushButton#goBackButton {
+background-color: rgb(178, 178, 178);
+border: 2px solid rgb(99, 99, 99);
+border-radius:10px;
+color: black;
+}
+
+QPushButton#goBackButton:hover {
+background-color: rgb(149, 149, 149);
+}</string>
+     </property>
+     <property name="text">
+      <string>Предыдущая страница</string>
+     </property>
+    </widget>
+   </widget>
+  </widget>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>
