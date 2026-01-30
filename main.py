@@ -63,7 +63,8 @@ class MainWindow(QMainWindow):
         self.mainPages.setCurrentWidget(self.greetPage)
         self.pages.setCurrentWidget(self.gamePage)
         self.pages.hide()
-        self.balanceLabel.setText(f'{self.balance} {morph.parse("Монета")[0].make_agree_with_number(self.balance).word}')
+        self.balanceLabel.setText(
+            f'{self.balance} {morph.parse("очко")[0].make_agree_with_number(self.balance).word}')
         for medal in self.medal_types:
             eval(f'self.{medal}Frame.hide()')
 
@@ -73,10 +74,9 @@ class MainWindow(QMainWindow):
 
         # Регистрация
 
-        self.nameEdit.textChanged.connect(self.setName)
-        self.firstFormRadioButton.clicked.connect(self.setForm)
-        self.secondFormRadioButton.clicked.connect(self.setForm)
-        self.saveButton.clicked.connect(self.loadData)
+        self.firstFormRadioButton.toggled.connect(self.setForm)
+        self.secondFormRadioButton.toggled.connect(self.setForm)
+        self.saveButton.clicked.connect(self.register)
         self.registerLabel.show()
 
         # Главное меню
@@ -160,32 +160,49 @@ class MainWindow(QMainWindow):
         self.name = self.nameEdit.text().lower()
 
     def setForm(self):
-        if self.sender().objectName() == 'firstClassRadioButton':
+        if self.firstFormRadioButton.isChecked():
             self.form = 1
-        elif self.sender().objectName() == 'secondClassRadioButton':
+        elif self.secondFormRadioButton.isChecked():
             self.form = 2
+
+    def reset(self):
+        self.balance = 1000
+        self.medals = []
+        self.difficulty = 'easy'
 
     def register(self):
         cur = self.con.cursor()
-        if cur.execute(f'SELECT name, form, balance, medals FROM data WHERE name = "{self.name}"').fetchone():
-            self.loadData()
-        else:
-            self.saveData()
+        if self.name:
+            if cur.execute(f'SELECT name, form, balance, medals FROM data WHERE name = "{self.name}"').fetchone():
+                self.saveData(edited=True)
+            else:
+                self.saveData()
+        self.reset()
+        print(self.medals)
+        for medal in self.medal_types:
+            if medal in self.medals:
+                eval(f'self.{medal}Frame.show()')
+            else:
+                eval(f'self.{medal}Frame.hide()')
+        self.changeColor()
 
-        if self.medals[1:]:
-            for m in self.medals:
-                if MEDALS.index(m) <= 2:
-                    self.leftBackgroundFrame.show()
-                else:
-                    self.rightBackgroundFrame.show()
+        self.setForm()
+        self.setName()
+
+        if not cur.execute(f'SELECT name, form, balance, medals FROM data WHERE name = "{self.name}"').fetchone():
+            self.saveData()
+        self.loadData()
+
+        self.registerLabel.hide()
 
         self.anotherGenerateTaskButton.setText('Нажми на стрелку справа чтобы появилась новая задача')
         self.changeColor()
+        self.openGameMenu()
 
-    def startGame(self):
         for btn in self.addedMenuButtons.buttons():
             btn.show()
 
+    def startGame(self):
         self.openGameMenu()
         self.mainPages.setCurrentWidget(self.mainPage)
 
@@ -229,20 +246,20 @@ class MainWindow(QMainWindow):
     def openGameMenu(self):
         self.pages.setCurrentWidget(self.chooseDifficultPage)
 
-    def openGame(self):
         self.resetMenuButtons()
         self.goToMainGameButton.setStyleSheet('''
-                QPushButton#goToMainGameButton {
-                    background-color: rgb(158, 255, 181);
-                    border: 2px solid black;
-                    border-radius: 25px;
-                    color: black;
-                    }
-                    QPushButton#goToMainGameButton:hover {
-                    background-color: rgb(128, 225, 151)
-                    }
-                ''')
+                        QPushButton#goToMainGameButton {
+                            background-color: rgb(158, 255, 181);
+                            border: 2px solid black;
+                            border-radius: 25px;
+                            color: black;
+                            }
+                            QPushButton#goToMainGameButton:hover {
+                            background-color: rgb(128, 225, 151)
+                            }
+                        ''')
 
+    def openGame(self):
         self.pages.setCurrentWidget(self.gamePage)
         self.is_signed = False
         if self.sender() == self.easyDifficultButton:
@@ -289,7 +306,8 @@ class MainWindow(QMainWindow):
             return
         elif self.balance >= int(self.sender().text().split()[0]) and name not in self.medals:
             self.balance -= int(self.sender().text().split()[0])
-            self.balanceLabel.setText(f'{self.balance} {morph.parse("Монета")[0].make_agree_with_number(self.balance).word}')
+            self.balanceLabel.setText(
+                f'{self.balance} {morph.parse("очко")[0].make_agree_with_number(self.balance).word}')
             eval(f'self.{name}Frame.show()')
             self.medals.append(name)
             self.saveData(edited=True)
@@ -345,15 +363,18 @@ class MainWindow(QMainWindow):
                     (f'У {names_gent[0]} есть {max(nums1[0], difference_under_10)} {morph.parse(objects[0])[0].make_agree_with_number(max(nums1[0], difference_under_10)).word}, {names[0]} {"съел" if NAMES.index(names[0]) < 10 else "съела"} {min(nums1[0], difference_under_10)} {morph.parse(objects[0])[0].make_agree_with_number(min(nums1[0], difference_under_10)).word}.',
                      abs(nums1[0] - difference_under_10), f'Сколько стало {objects_plur_gent[0]} у {names_gent[0]}?'),
                     (f'У {names_gent[0]} {nums1[0]} {morph.parse(objects[0])[0].make_agree_with_number(nums1[0]).word}, а у {names_gent[1]} {nums1[0] + difference_under_10} {morph.parse(objects[0])[0].make_agree_with_number(nums1[0] + difference_under_10).word}.',
-                     difference_under_10, f'На сколько у {names_gent[1]} {objects_plur_gent[0]} больше, чем у {names_gent[0]}?'),
+                     difference_under_10,
+                     f'На сколько у {names_gent[1]} {objects_plur_gent[0]} больше, чем у {names_gent[0]}?'),
                     (f'У {names_gent[0]} {nums1[0] + difference_under_10} {morph.parse(objects[0])[0].make_agree_with_number(nums1[0] + difference_under_10).word}, а у {names_gent[1]} {nums1[0]} {morph.parse(objects[0])[0].make_agree_with_number(nums1[0]).word}.',
-                     difference_under_10, f'На сколько у {names_gent[1]} {objects_plur_gent[0]} меньше, чем у {names_gent[0]}?')
+                     difference_under_10,
+                     f'На сколько у {names_gent[1]} {objects_plur_gent[0]} меньше, чем у {names_gent[0]}?')
                 ],
                 'hard': [
                     (f'У {names_gent[0]} есть {nums1[0]} {morph.parse(objects[0])[0].make_agree_with_number(nums1[0]).word} и {objects_plur[1]}, причем {objects_plur_gent[1]} на {difference_under_10} больше, чем {objects_plur_gent[0]}.',
                      nums1[0] * 2 + difference_under_10, f'Сколько всего фруктов у {names_gent[0]}?'),
                     (f'У {names_gent[0]} есть {max(nums1[0], difference_under_10)} {morph.parse(objects[0])[0].make_agree_with_number(max(nums1[0], difference_under_10)).word} и {objects_plur[1]}, причем {objects_plur_gent[1]} на {min(nums1[0], difference_under_10)} меньше, чем {objects_plur_gent[0]}.',
-                     max(nums1[0], difference_under_10) * 2 - min(nums1[0], difference_under_10), f'Сколько всего фруктов у {names_gent[0]}?')
+                     max(nums1[0], difference_under_10) * 2 - min(nums1[0], difference_under_10),
+                     f'Сколько всего фруктов у {names_gent[0]}?')
                 ]
             },
             '2': {
@@ -361,29 +382,42 @@ class MainWindow(QMainWindow):
                     (f'У {names_gent[0]} есть {nums2[0]} {morph.parse(objects[0])[0].make_agree_with_number(nums2[0]).word}, {names_datv[0]} дали еще {difference_under_100_1}.',
                      nums2[0] + difference_under_100_1, f'Сколько стало {objects_plur_gent[0]} у {names_gent[0]}?'),
                     (f'У {names_gent[0]} есть {max(nums2[0], difference_under_100_1)} {morph.parse(objects[0])[0].make_agree_with_number(nums2[0]).word}, {names[0]} {"съел" if NAMES.index(names[0]) < 10 else "съела"} {min(nums2[0], difference_under_100_1)} {morph.parse(objects[0])[0].make_agree_with_number(difference_under_100_1).word}.',
-                     abs(nums2[0] - difference_under_100_1), f'Сколько стало {objects_plur_gent[0]} у {names_gent[0]}?'),
+                     abs(nums2[0] - difference_under_100_1),
+                     f'Сколько стало {objects_plur_gent[0]} у {names_gent[0]}?'),
                     (f'У {names_gent[0]} {nums2[0]} {morph.parse(objects[0])[0].make_agree_with_number(nums2[0]).word}, а у {names_gent[1]} {nums2[0] + difference_under_100_1} {morph.parse(objects[0])[0].make_agree_with_number(nums2[0] + difference_under_100_1).word}.',
-                     difference_under_100_1, f'На сколько у {names_gent[1]} {objects_plur_gent[0]} больше, чем у {names_gent[0]}?'),
+                     difference_under_100_1,
+                     f'На сколько у {names_gent[1]} {objects_plur_gent[0]} больше, чем у {names_gent[0]}?'),
                     (f'У {names_gent[0]} {nums2[0] + difference_under_100_1} {morph.parse(objects[0])[0].make_agree_with_number(nums2[0] + difference_under_100_1).word}, а у {names_gent[1]} {nums2[0]} {morph.parse(objects[0])[0].make_agree_with_number(nums2[0]).word}.',
-                     difference_under_100_1, f'На сколько у {names_gent[1]} {objects_plur_gent[0]} меньше, чем у {names_gent[0]}?'),
+                     difference_under_100_1,
+                     f'На сколько у {names_gent[1]} {objects_plur_gent[0]} меньше, чем у {names_gent[0]}?'),
                     (f'У {names_gent[0]} есть {nums2[0]} {morph.parse(objects[0])[0].make_agree_with_number(nums2[0]).word}, а у {names_gent[1]} - в {difference_under_100_2} {"раза" if int(str(difference_under_100_2)[-1]) in range(1, 5) and int(str(difference_under_100_2)[0]) != 1 else "раз"} меньше.',
                      nums2[0] // difference_under_100_2, f'Сколько {objects_plur_gent[0]} у {names_gent[1]}?'),
                     (f'У {names_gent[0]} есть {nums2[0] if nums2[0] <= 20 else nums2[0] - 20} {morph.parse(objects[0])[0].make_agree_with_number(nums2[0] if nums2[0] <= 20 else nums2[0] - 20).word}, а у {names_gent[1]} - в {multer1} раза больше.',
-                     (nums2[0] if nums2[0] <= 20 else nums2[0] - 20) * multer1, f'Сколько {objects_plur_gent[0]} у {names_gent[1]}?'),
+                     (nums2[0] if nums2[0] <= 20 else nums2[0] - 20) * multer1,
+                     f'Сколько {objects_plur_gent[0]} у {names_gent[1]}?'),
                     (f'У {names_gent[0]} есть {nums2[0]} {morph.parse(objects[0])[0].make_agree_with_number(nums2[0]).word}, а у {names_gent[1]} – {nums2[0] * difference_under_100_2 if nums2[0] * difference_under_100_2 <= 100 else nums2[0] * self.getDivisors(nums2[0])[0]} {morph.parse(objects[0])[0].make_agree_with_number(nums2[0] * difference_under_100_2 if nums2[0] * difference_under_100_2 <= 100 else nums2[0] * self.getDivisors(nums2[0])[0]).word}.',
-                     (nums2[0] * difference_under_100_2 if nums2[0] * difference_under_100_2 <= 100 else nums2[0] * self.getDivisors(nums2[0])[0]) // nums2[0], f'Во сколько у {names_gent[1]} {objects_plur_gent[0]} больше, чем у {names_gent[0]}?'),
+                     (nums2[0] * difference_under_100_2 if nums2[0] * difference_under_100_2 <= 100 else nums2[0] *
+                                                                                                         self.getDivisors(
+                                                                                                             nums2[0])[
+                                                                                                             0]) //
+                     nums2[0], f'Во сколько у {names_gent[1]} {objects_plur_gent[0]} больше, чем у {names_gent[0]}?'),
                     (f'У {names_gent[0]} есть {nums2[0]} {morph.parse(objects[0])[0].make_agree_with_number(nums2[0]).word}, а у {names_gent[1]} – {nums2[0] // difference_under_100_2} {morph.parse(objects[0])[0].make_agree_with_number(nums2[0] // difference_under_100_2).word}.',
-                     difference_under_100_2, f'Во сколько раз у {names_gent[1]} {objects_plur_gent[0]} меньше, чем у {names_gent[0]}?')
+                     difference_under_100_2,
+                     f'Во сколько раз у {names_gent[1]} {objects_plur_gent[0]} меньше, чем у {names_gent[0]}?')
                 ],
                 'hard': [
                     (f'У {names_gent[0]} есть {nums2[0]} {morph.parse(objects[0])[0].make_agree_with_number(nums2[0]).word} и {morph.parse(objects[1])[0].inflect({"plur"}).word}, причем {objects_plur_gent[1]} на {difference_under_100_1} больше, чем {objects_plur_gent[0]}.',
                      nums2[0] * 2 + difference_under_100_1, f'Сколько всего фруктов у {names_gent[0]}?'),
                     (f'У {names_gent[0]} есть {max(nums2[0], difference_under_100_1)} {morph.parse(objects[0])[0].make_agree_with_number(nums2[0]).word} и {morph.parse(objects[1])[0].inflect({"plur"}).word}, причем {objects_plur_gent[1]} на {min(nums2[0], difference_under_100_1)} меньше, чем {objects_plur_gent[0]}.',
-                     max(nums2[0], difference_under_100_1) * 2 - min(nums2[0], difference_under_100_1), f'Сколько всего фруктов у {names_gent[0]}?'),
+                     max(nums2[0], difference_under_100_1) * 2 - min(nums2[0], difference_under_100_1),
+                     f'Сколько всего фруктов у {names_gent[0]}?'),
                     (f'У {names_gent[0]} есть {nums2[0]} {morph.parse(objects[0])[0].make_agree_with_number(nums2[0]).word} и {morph.parse(objects[1])[0].inflect({"plur"}).word}, причем {objects_plur_gent[1]} в {difference_under_100_2 if difference_under_100_2 <= 10 else self.getDivisors(nums2[0])[0]} {"раза" if int(str(nums2[0])[-1]) in range(1, 5) and int(str(nums2[0])[0]) != 1 else "раз"} больше, чем {objects_plur_gent[0]}.',
-                     nums2[0] * (difference_under_100_2 if difference_under_100_2 <= 10 else self.getDivisors(nums2[0])[0] + 1), f'Сколько всего фруктов у {names_gent[0]}?'),
+                     nums2[0] * (
+                         difference_under_100_2 if difference_under_100_2 <= 10 else self.getDivisors(nums2[0])[0] + 1),
+                     f'Сколько всего фруктов у {names_gent[0]}?'),
                     (f'У {names_gent[0]} есть {nums2[0]} {morph.parse(objects[0])[0].make_agree_with_number(nums2[0]).word} и {morph.parse(objects[1])[0].inflect({"plur"}).word}, причем {objects_plur_gent[1]} в {difference_under_100_2} {"раза" if int(str(nums2[0])[-1]) in range(1, 5) and int(str(nums2[0])[0]) != 1 else "раз"} меньше, чем {objects_plur_gent[0]}.',
-                     nums2[0] * (difference_under_100_2 + 1) // difference_under_100_2, f'Сколько всего фруктов у {names_gent[0]}?'),
+                     nums2[0] * (difference_under_100_2 + 1) // difference_under_100_2,
+                     f'Сколько всего фруктов у {names_gent[0]}?'),
                     (f'У {names_gent[0]} есть {ost1} {morph.parse("фрукт")[0].make_agree_with_number(ost1).word}: {ost2} {morph.parse(objects[0])[0].make_agree_with_number(ost2).word}, {ost3} {morph.parse(objects[1])[0].make_agree_with_number(ost3).word} и {objects_plur[2]}.',
                      ost4, f'Сколько {objects_plur_gent[2]} у {names_gent[0]}?'),
                     (f'У {names_gent[0]} есть {nums3[0]} {morph.parse(objects[0])[0].make_agree_with_number(nums3[0]).word}, {objects_plur[1]} и {objects_plur[2]}, причем {objects_plur_gent[1]} на {nums3[0] - nums3[1]} меньше, чем {objects_plur_gent[0]}, а {objects_plur_gent[2]} на {nums3[1] - nums3[2]} меньше, чем {objects_plur_gent[1]}.',
@@ -419,16 +453,17 @@ class MainWindow(QMainWindow):
             pass
 
     def redoTask(self):
-        if self.current_task_index == len(self.task_history) - 1 or not self.task_history:
+        if self.current_task_index == len(
+                self.task_history) - 1 or not self.task_history or self.anotherGenerateTaskButton.text() == 'Нажми на стрелку справа чтобы появилась новая задача':
             self.generateTask()
         if self.current_task_index < len(self.task_history) - 1:
             self.current_task_index += 1
             self.setTask(self.task_history[self.current_task_index])
 
     def setTask(self, task):
-        ex_text = '\n'.join(list(map(lambda x: x.ljust(42), textwrap.wrap(task[0], 80))))
+        ex_text = '\n'.join(list(map(lambda x: x.ljust(50), textwrap.wrap(task[0], 50))))
         self.anotherGenerateTaskButton.setText(ex_text)
-        qu_text = '\n'.join(list(map(lambda x: x.ljust(35), textwrap.wrap(task[2], 80))))
+        qu_text = '\n'.join(list(map(lambda x: x.ljust(35), textwrap.wrap(task[2], 35))))
         self.currentQuestionLabel.setText(qu_text)
         self.answer = task[1]
 
@@ -465,7 +500,8 @@ class MainWindow(QMainWindow):
                 Dialog(10).exec()
                 self.changeColor()
             self.resetGame()
-            self.balanceLabel.setText(f'{self.balance} {morph.parse("Монета")[0].make_agree_with_number(self.balance).word}')
+            self.balanceLabel.setText(
+                f'{self.balance} {morph.parse("очко")[0].make_agree_with_number(self.balance).word}')
             self.changeColor()
             if len(self.task_history) < 10:
                 self.current_task_index += 1
@@ -489,28 +525,33 @@ class MainWindow(QMainWindow):
                                                     QPushButton#''' + btn.objectName() + ''':hover{
                                                         background-color: rgb(235, 235, 107)
                                                     }''')
-                btn.setText('Куплено')
+                btn.setText('Уже есть')
             else:
-                if int(btn.text().split()[0]) <= self.balance and btn.objectName()[:-9] not in self.medals:
-                    btn.setStyleSheet('QPushButton#' + btn.objectName() + '''{
-                                            border-radius: 25px;
-                                            background-color: rgb(255, 255, 127);
-                                            border: 1px solid #000000;
-                                            color: green;
-                                        }
-                                        QPushButton#''' + btn.objectName() + ''':hover{
-                                            background-color: rgb(235, 235, 107)
-                                        }''')
+                if MEDALS.index(btn.objectName()[:-9]) != 5:
+                    btn.setText(f'{(MEDALS.index(btn.objectName()[:-9]) + 1) * 100} очков')
                 else:
-                    btn.setStyleSheet('QPushButton#' + btn.objectName() + '''{
-                                            border-radius: 25px;
-                                            background-color: rgb(255, 255, 127);
-                                            border: 1px solid #000000;
-                                            color: red;
-                                        }
-                                        QPushButton#''' + btn.objectName() + ''':hover{
-                                            background-color: rgb(235, 235, 107)
-                                        }''')
+                    btn.setText('1000 очков')
+                if btn.text() != 'Уже есть':
+                    if int(btn.text().split()[0]) <= self.balance and btn.objectName()[:-9] not in self.medals:
+                        btn.setStyleSheet('QPushButton#' + btn.objectName() + '''{
+                                                border-radius: 25px;
+                                                background-color: rgb(255, 255, 127);
+                                                border: 1px solid #000000;
+                                                color: green;
+                                            }
+                                            QPushButton#''' + btn.objectName() + ''':hover{
+                                                background-color: rgb(235, 235, 107)
+                                            }''')
+                    else:
+                        btn.setStyleSheet('QPushButton#' + btn.objectName() + '''{
+                                                border-radius: 25px;
+                                                background-color: rgb(255, 255, 127);
+                                                border: 1px solid #000000;
+                                                color: red;
+                                            }
+                                            QPushButton#''' + btn.objectName() + ''':hover{
+                                                background-color: rgb(235, 235, 107)
+                                            }''')
 
     def saveData(self, edited=False):
         cur = self.con.cursor()
@@ -549,10 +590,13 @@ class MainWindow(QMainWindow):
         self.balance = data[2]
         self.medals = data[3].split('|')
         self.changeColor()
-        self.balanceLabel.setText(f'{self.balance} {morph.parse("Монета")[0].make_agree_with_number(self.balance).word}')
+        self.balanceLabel.setText(
+            f'{self.balance} {morph.parse("очко")[0].make_agree_with_number(self.balance).word}')
         for medal in self.medal_types:
             if medal in self.medals:
                 eval(f'self.{medal}Frame.show()')
+            else:
+                eval(f'self.{medal}Frame.hide()')
         self.changeColor()
 
     def quitGame(self):
@@ -586,7 +630,7 @@ class Dialog(QDialog):
             self.setStyleSheet('''QDialog#Dialog {
             background-color: rgb(170, 255, 127);
             }''')
-            self.label.setText(f'Молодец! Ты правильно решил задачу. Ты получаешь {self.reward} монет!')
+            self.label.setText(f'Молодец! Ты правильно решил задачу. Ты получаешь {self.reward} очков!')
             self.label.setStyleSheet('color: rgb(0, 71, 0)')
             self.acceptButton.setStyleSheet(
                 '''QPushButton#acceptButton {
@@ -627,13 +671,9 @@ class TutorialDialog(QDialog):
         uic.loadUi('ui/tutorialDialog.ui', self)
 
         self.quitButton.clicked.connect(self.quit)
-        self.goToMainMenuButton.clicked.connect(self.openMainMenuPage)
         self.goToChooseDifficultyPageButton.clicked.connect(self.openChooseDifficultyPage)
         self.goToMainGameButton.clicked.connect(self.openMainGamePage)
         self.goToShopButton.clicked.connect(self.openShopPage)
-
-    def openMainMenuPage(self):
-        self.pages.setCurrentWidget(self.mainMenuPage)
 
     def openChooseDifficultyPage(self):
         self.pages.setCurrentWidget(self.chooseDifficultyPage)

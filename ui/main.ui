@@ -87,7 +87,7 @@
        <string notr="true">background-color:rgb(219, 249, 255)</string>
       </property>
       <property name="currentIndex">
-       <number>2</number>
+       <number>1</number>
       </property>
       <widget class="QWidget" name="chooseDifficultPage">
        <property name="styleSheet">
@@ -225,7 +225,7 @@ background-color: rgb(235, 235, 107)
 }</string>
         </property>
         <property name="text">
-         <string>100 монет</string>
+         <string>100 очков</string>
         </property>
         <property name="autoRepeatInterval">
          <number>101</number>
@@ -261,7 +261,7 @@ background-color: rgb(235, 235, 107)
 }</string>
         </property>
         <property name="text">
-         <string>400 монет</string>
+         <string>400 очков</string>
         </property>
         <attribute name="buttonGroup">
          <string notr="true">buyButtons</string>
@@ -294,7 +294,7 @@ background-color: rgb(235, 235, 107)
 }</string>
         </property>
         <property name="text">
-         <string>200 монет</string>
+         <string>200 очков</string>
         </property>
         <attribute name="buttonGroup">
          <string notr="true">buyButtons</string>
@@ -327,7 +327,7 @@ background-color: rgb(235, 235, 107)
 }</string>
         </property>
         <property name="text">
-         <string>500 монет</string>
+         <string>500 очков</string>
         </property>
         <attribute name="buttonGroup">
          <string notr="true">buyButtons</string>
@@ -360,7 +360,7 @@ background-color: rgb(235, 235, 107)
 }</string>
         </property>
         <property name="text">
-         <string>300 монет</string>
+         <string>300 очков</string>
         </property>
         <attribute name="buttonGroup">
          <string notr="true">buyButtons</string>
@@ -393,7 +393,7 @@ background-color: rgb(235, 235, 107)
 }</string>
         </property>
         <property name="text">
-         <string>1000 монет</string>
+         <string>1000 очков</string>
         </property>
         <attribute name="buttonGroup">
          <string notr="true">buyButtons</string>
@@ -532,7 +532,7 @@ background-color: rgb(235, 235, 107)
          <string notr="true">color: rgb(0, 0, 0);</string>
         </property>
         <property name="text">
-         <string>0 Монет</string>
+         <string>0 очков</string>
         </property>
         <property name="alignment">
          <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
@@ -1111,9 +1111,9 @@ background-color: rgb(119, 171, 225);
      <widget class="QPushButton" name="goToMainGameButton">
       <property name="geometry">
        <rect>
-        <x>460</x>
+        <x>430</x>
         <y>10</y>
-        <width>331</width>
+        <width>261</width>
         <height>121</height>
        </rect>
       </property>
@@ -1135,7 +1135,17 @@ background-color: rgb(128, 225, 151)
 }</string>
       </property>
       <property name="text">
-       <string>Играть</string>
+       <string> Играть</string>
+      </property>
+      <property name="icon">
+       <iconset>
+        <normaloff>../images/play.png</normaloff>../images/play.png</iconset>
+      </property>
+      <property name="iconSize">
+       <size>
+        <width>101</width>
+        <height>101</height>
+       </size>
       </property>
       <attribute name="buttonGroup">
        <string notr="true">addedMenuButtons</string>
@@ -1144,9 +1154,9 @@ background-color: rgb(128, 225, 151)
      <widget class="QPushButton" name="leaveGameButton">
       <property name="geometry">
        <rect>
-        <x>1630</x>
+        <x>1460</x>
         <y>10</y>
-        <width>331</width>
+        <width>371</width>
         <height>121</height>
        </rect>
       </property>
@@ -1168,7 +1178,17 @@ background-color: rgb(225, 145, 145)
 }</string>
       </property>
       <property name="text">
-       <string>Выйти из игры</string>
+       <string> Выйти из игры</string>
+      </property>
+      <property name="icon">
+       <iconset>
+        <normaloff>../images/quit.png</normaloff>../images/quit.png</iconset>
+      </property>
+      <property name="iconSize">
+       <size>
+        <width>71</width>
+        <height>71</height>
+       </size>
       </property>
       <attribute name="buttonGroup">
        <string notr="true">addedMenuButtons</string>
@@ -1177,9 +1197,9 @@ background-color: rgb(225, 145, 145)
      <widget class="QPushButton" name="goToShopButton">
       <property name="geometry">
        <rect>
-        <x>850</x>
+        <x>740</x>
         <y>10</y>
-        <width>331</width>
+        <width>311</width>
         <height>121</height>
        </rect>
       </property>
@@ -1201,7 +1221,17 @@ background-color: rgb(225, 223, 137)
 }</string>
       </property>
       <property name="text">
-       <string>Магазин</string>
+       <string>Награды</string>
+      </property>
+      <property name="icon">
+       <iconset>
+        <normaloff>../images/shop.png</normaloff>../images/shop.png</iconset>
+      </property>
+      <property name="iconSize">
+       <size>
+        <width>111</width>
+        <height>111</height>
+       </size>
       </property>
       <attribute name="buttonGroup">
        <string notr="true">addedMenuButtons</string>
@@ -1258,9 +1288,9 @@ color: rgb(0, 0, 0);</string>
      <widget class="QPushButton" name="goToHelpButton">
       <property name="geometry">
        <rect>
-        <x>1240</x>
+        <x>1100</x>
         <y>10</y>
-        <width>331</width>
+        <width>311</width>
         <height>121</height>
        </rect>
       </property>
@@ -1283,6 +1313,16 @@ background-color: rgb(225, 223, 137)
       </property>
       <property name="text">
        <string>Помощь</string>
+      </property>
+      <property name="icon">
+       <iconset>
+        <normaloff>../images/help.png</normaloff>../images/help.png</iconset>
+      </property>
+      <property name="iconSize">
+       <size>
+        <width>111</width>
+        <height>111</height>
+       </size>
       </property>
       <attribute name="buttonGroup">
        <string notr="true">addedMenuButtons</string>
