@@ -31,16 +31,38 @@
    <property name="currentIndex">
     <number>0</number>
    </property>
-   <widget class="QWidget" name="mainGamePage"/>
+   <widget class="QWidget" name="mainGamePage">
+    <widget class="QLabel" name="difficultyFrame">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>10</y>
+       <width>1491</width>
+       <height>871</height>
+      </rect>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">background-color: rgb(255, 255, 255);
+border: 3px solid black;
+border-radius: 20px;</string>
+     </property>
+     <property name="text">
+      <string/>
+     </property>
+     <property name="scaledContents">
+      <bool>true</bool>
+     </property>
+    </widget>
+   </widget>
    <widget class="QWidget" name="chooseDifficultyPage"/>
    <widget class="QWidget" name="shopPage"/>
   </widget>
   <widget class="QPushButton" name="goToChooseDifficultyPageButton">
    <property name="geometry">
     <rect>
-     <x>160</x>
+     <x>130</x>
      <y>20</y>
-     <width>281</width>
+     <width>311</width>
      <height>91</height>
     </rect>
    </property>
@@ -63,7 +85,7 @@ background-color: rgb(225, 223, 137)
 }</string>
    </property>
    <property name="text">
-    <string>Сложность</string>
+    <string>Уровни сложности</string>
    </property>
   </widget>
   <widget class="QPushButton" name="goToMainGameButton">
