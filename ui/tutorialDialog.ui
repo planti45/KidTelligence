@@ -29,20 +29,20 @@
     <string notr="true">background-color:rgb(219, 249, 255)</string>
    </property>
    <property name="currentIndex">
-    <number>0</number>
+    <number>2</number>
    </property>
    <widget class="QWidget" name="mainGamePage">
-    <widget class="QLabel" name="difficultyFrame">
+    <widget class="QLabel" name="difficultyFrame_2">
      <property name="geometry">
       <rect>
        <x>10</x>
-       <y>10</y>
+       <y>20</y>
        <width>1491</width>
        <height>871</height>
       </rect>
      </property>
      <property name="styleSheet">
-      <string notr="true">background-color: rgb(255, 255, 255);
+      <string notr="true">background-color: rgb(219, 249, 255);
 border: 3px solid black;
 border-radius: 20px;</string>
      </property>
@@ -53,9 +53,89 @@ border-radius: 20px;</string>
       <bool>true</bool>
      </property>
     </widget>
+    <widget class="QLabel" name="mainGameTutorial">
+     <property name="geometry">
+      <rect>
+       <x>70</x>
+       <y>40</y>
+       <width>1371</width>
+       <height>831</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string/>
+     </property>
+     <property name="pixmap">
+      <pixmap>../images/mainGameTutorial.png</pixmap>
+     </property>
+     <property name="scaledContents">
+      <bool>true</bool>
+     </property>
+    </widget>
    </widget>
-   <widget class="QWidget" name="chooseDifficultyPage"/>
-   <widget class="QWidget" name="shopPage"/>
+   <widget class="QWidget" name="chooseDifficultyPage">
+    <widget class="QLabel" name="difficultyFrame">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>20</y>
+       <width>1491</width>
+       <height>871</height>
+      </rect>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">background-color: rgb(219, 249, 255);
+border: 3px solid black;
+border-radius: 20px;</string>
+     </property>
+     <property name="text">
+      <string/>
+     </property>
+     <property name="scaledContents">
+      <bool>true</bool>
+     </property>
+    </widget>
+    <widget class="QLabel" name="difficultyTutorial">
+     <property name="geometry">
+      <rect>
+       <x>60</x>
+       <y>30</y>
+       <width>1371</width>
+       <height>851</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string/>
+     </property>
+     <property name="pixmap">
+      <pixmap>../images/difficultyTutorial.png</pixmap>
+     </property>
+     <property name="scaledContents">
+      <bool>true</bool>
+     </property>
+    </widget>
+   </widget>
+   <widget class="QWidget" name="shopPage">
+    <widget class="QLabel" name="rewardsTutorial">
+     <property name="geometry">
+      <rect>
+       <x>100</x>
+       <y>0</y>
+       <width>1301</width>
+       <height>881</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string/>
+     </property>
+     <property name="pixmap">
+      <pixmap>../images/rewardsTutorial.png</pixmap>
+     </property>
+     <property name="scaledContents">
+      <bool>true</bool>
+     </property>
+    </widget>
+   </widget>
   </widget>
   <widget class="QPushButton" name="goToChooseDifficultyPageButton">
    <property name="geometry">
@@ -87,6 +167,9 @@ background-color: rgb(225, 223, 137)
    <property name="text">
     <string>Уровни сложности</string>
    </property>
+   <attribute name="buttonGroup">
+    <string notr="true">menuButtons</string>
+   </attribute>
   </widget>
   <widget class="QPushButton" name="goToMainGameButton">
    <property name="geometry">
@@ -118,6 +201,9 @@ background-color: rgb(225, 223, 137)
    <property name="text">
     <string>Как играть</string>
    </property>
+   <attribute name="buttonGroup">
+    <string notr="true">menuButtons</string>
+   </attribute>
   </widget>
   <widget class="QPushButton" name="goToShopButton">
    <property name="geometry">
@@ -149,6 +235,9 @@ background-color: rgb(225, 223, 137)
    <property name="text">
     <string>Награды</string>
    </property>
+   <attribute name="buttonGroup">
+    <string notr="true">menuButtons</string>
+   </attribute>
   </widget>
   <widget class="QPushButton" name="quitButton">
    <property name="geometry">
@@ -180,8 +269,14 @@ background-color: rgb(225, 146, 146)
    <property name="text">
     <string>Закрыть</string>
    </property>
+   <attribute name="buttonGroup">
+    <string notr="true">menuButtons</string>
+   </attribute>
   </widget>
  </widget>
  <resources/>
  <connections/>
+ <buttongroups>
+  <buttongroup name="menuButtons"/>
+ </buttongroups>
 </ui>

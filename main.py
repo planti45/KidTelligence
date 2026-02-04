@@ -9,7 +9,8 @@ import pygame
 
 from PyQt6 import uic
 from PyQt6.QtWidgets import QMainWindow, QApplication, QDialog
-from PyQt6.QtCore import Qt, QTimer
+from PyQt6.QtCore import Qt
+from PyQt6.QtGui import QColor, QPalette
 
 morph = pymorphy3.MorphAnalyzer()
 
@@ -675,14 +676,89 @@ class TutorialDialog(QDialog):
         self.goToMainGameButton.clicked.connect(self.openMainGamePage)
         self.goToShopButton.clicked.connect(self.openShopPage)
 
+        self.openChooseDifficultyPage()
+
     def openChooseDifficultyPage(self):
         self.pages.setCurrentWidget(self.chooseDifficultyPage)
+        self.resetMenuButtons()
+        self.goToChooseDifficultyPageButton.setStyleSheet('''
+                QPushButton#goToChooseDifficultyPageButton {
+                    background-color: rgb(158, 255, 181);
+                    border: 2px solid black;
+                    border-radius: 25px;
+                    color: black;
+                    }
+                    QPushButton#goToChooseDifficultyPageButton:hover {
+                    background-color: rgb(128, 225, 151)
+                    }
+                ''')
 
     def openMainGamePage(self):
         self.pages.setCurrentWidget(self.mainGamePage)
+        self.resetMenuButtons()
+        self.goToMainGameButton.setStyleSheet('''
+                        QPushButton#goToMainGameButton {
+                            background-color: rgb(158, 255, 181);
+                            border: 2px solid black;
+                            border-radius: 25px;
+                            color: black;
+                            }
+                            QPushButton#goToMainGameButton:hover {
+                            background-color: rgb(128, 225, 151)
+                            }
+                        ''')
 
     def openShopPage(self):
         self.pages.setCurrentWidget(self.shopPage)
+        self.resetMenuButtons()
+        self.goToShopButton.setStyleSheet('''
+                                QPushButton#goToShopButton {
+                                    background-color: rgb(158, 255, 181);
+                                    border: 2px solid black;
+                                    border-radius: 25px;
+                                    color: black;
+                                    }
+                                    QPushButton#goToShopButton:hover {
+                                    background-color: rgb(128, 225, 151)
+                                    }
+                                ''')
+
+    def resetMenuButtons(self):
+        self.goToMainGameButton.setStyleSheet('''
+        QPushButton#goToMainGameButton {
+            background-color: rgb(255, 253, 167);
+            border: 2px solid black;
+            border-radius: 25px;
+            color: black;
+            }
+            QPushButton#goToMainGameButton:hover {
+            background-color: rgb(225, 223, 137)
+            }
+        ''')
+
+        self.goToShopButton.setStyleSheet('''
+        QPushButton#goToShopButton {
+            background-color: rgb(255, 253, 167);
+            border: 2px solid black;
+            border-radius: 25px;
+            color: black;
+            }
+            QPushButton#goToShopButton:hover {
+            background-color: rgb(225, 223, 137)
+            }
+        ''')
+
+        self.goToChooseDifficultyPageButton.setStyleSheet('''
+        QPushButton#goToChooseDifficultyPageButton {
+            background-color: rgb(255, 253, 167);
+            border: 2px solid black;
+            border-radius: 25px;
+            color: black;
+            }
+            QPushButton#goToChooseDifficultyPageButton:hover {
+            background-color: rgb(225, 223, 137)
+            }
+        ''')
 
     def quit(self):
         self.close()
