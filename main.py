@@ -199,6 +199,7 @@ class MainWindow(QMainWindow):
         self.registerLabel.hide()
 
         self.anotherGenerateTaskButton.setText('Нажми на стрелку справа чтобы появилась новая задача')
+        self.currentQuestionLabel.setText('')
         self.changeColor()
         self.openGameMenu()
 
@@ -270,6 +271,7 @@ class MainWindow(QMainWindow):
         elif self.sender() == self.hardDifficultButton:
             self.difficulty = 'hard'
         self.anotherGenerateTaskButton.setText('Нажми на стрелку справа чтобы появилась новая задача')
+        self.currentQuestionLabel.setText('')
 
     def openTutorial(self):
         self.resetMenuButtons()
@@ -475,6 +477,7 @@ class MainWindow(QMainWindow):
     def resetGame(self):
         self.answerSpinBox.setValue(0)
         self.anotherGenerateTaskButton.setText('Нажми на стрелку справа чтобы появилась новая задача')
+        self.currentQuestionLabel.setText('')
         self.answerSpinBox.cleanText()
         self.currentQuestionLabel.clear()
 
