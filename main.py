@@ -66,6 +66,8 @@ class MainWindow(QMainWindow):
         self.pages.hide()
         self.balanceLabel.setText(
             f'{self.balance} {morph.parse("очко")[0].make_agree_with_number(self.balance).word}')
+        self.scoreLabel.setText(
+            f'{self.balance} {morph.parse("очко")[0].make_agree_with_number(self.balance).word}')
         for medal in self.medal_types:
             eval(f'self.{medal}Frame.hide()')
 
@@ -309,6 +311,8 @@ class MainWindow(QMainWindow):
             self.balance -= int(self.sender().text().split()[0])
             self.balanceLabel.setText(
                 f'{self.balance} {morph.parse("очко")[0].make_agree_with_number(self.balance).word}')
+            self.scoreLabel.setText(
+                f'{self.balance} {morph.parse("очко")[0].make_agree_with_number(self.balance).word}')
             eval(f'self.{name}Frame.show()')
             self.medals.append(name)
             self.saveData(edited=True)
@@ -490,29 +494,32 @@ class MainWindow(QMainWindow):
         pygame.quit()
 
     def checkAnswer(self):
-        if self.answerSpinBox.value() == self.answer:
-            self.playAudio(Sound.CORRECT_ANSWER_SOUND)
-            if self.difficulty == 'hard':
-                self.balance += 20
-                Dialog(20).exec()
+        if self.anotherGenerateTaskButton.text() != 'Нажми на стрелку справа чтобы появилась новая задача':
+            if self.answerSpinBox.value() == self.answer:
+                self.playAudio(Sound.CORRECT_ANSWER_SOUND)
+                if self.difficulty == 'hard':
+                    self.balance += 20
+                    Dialog(20).exec()
+                    self.changeColor()
+                else:
+                    self.balance += 10
+                    Dialog(10).exec()
+                    self.changeColor()
+                self.resetGame()
+                self.balanceLabel.setText(
+                    f'{self.balance} {morph.parse("очко")[0].make_agree_with_number(self.balance).word}')
+                self.scoreLabel.setText(
+                    f'{self.balance} {morph.parse("очко")[0].make_agree_with_number(self.balance).word}')
                 self.changeColor()
-            else:
-                self.balance += 10
-                Dialog(10).exec()
-                self.changeColor()
-            self.resetGame()
-            self.balanceLabel.setText(
-                f'{self.balance} {morph.parse("очко")[0].make_agree_with_number(self.balance).word}')
-            self.changeColor()
-            if len(self.task_history) < 10:
-                self.current_task_index += 1
-            else:
-                self.task_history.pop(0)
-                self.current_task_index = 9
+                if len(self.task_history) < 10:
+                    self.current_task_index += 1
+                else:
+                    self.task_history.pop(0)
+                    self.current_task_index = 9
 
-        else:
-            self.playAudio(Sound.INCORRECT_ANSWER_SOUND)
-            Dialog(10, False).exec()
+            else:
+                self.playAudio(Sound.INCORRECT_ANSWER_SOUND)
+                Dialog(10, False).exec()
 
     def changeColor(self):
         for btn in self.buyButtons.buttons():
@@ -592,6 +599,8 @@ class MainWindow(QMainWindow):
         self.medals = data[3].split('|')
         self.changeColor()
         self.balanceLabel.setText(
+            f'{self.balance} {morph.parse("очко")[0].make_agree_with_number(self.balance).word}')
+        self.scoreLabel.setText(
             f'{self.balance} {morph.parse("очко")[0].make_agree_with_number(self.balance).word}')
         for medal in self.medal_types:
             if medal in self.medals:
